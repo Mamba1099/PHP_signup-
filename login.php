@@ -1,21 +1,23 @@
 <?php
 
+$is_invalid = false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $mysqli = require __DIR__ . "/database.sql";
+    $mysqli = require __DIR__ . "/db_conn.php";
 
     $sql = sprintf(
-        "SELECT * FROM Info 
-                    WHERE email = '$s'",
+        "SELECT * FROM Info WHERE email = '%s'",
         $mysqli->real_escape_string($_POST["email"])
     );
-    $result = $mysql->query($sql);
+
+    $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
 
     var_dump($user);
     exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="eng">
@@ -36,6 +38,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body>
     <h1>Login</h1>
+    <?php if ($is_invalid) : ?>
+        <em>Invalid login</em>
+    <?php endif; ?>
+
     <form method="post">
         <div>
             <label for="email">Enter Email</label>
