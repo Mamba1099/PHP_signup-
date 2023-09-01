@@ -1,0 +1,10 @@
+CREATE DATABASE Logins;
+
+USE Logins;
+
+CREATE TABLE Info (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(128),
+    email VARCHAR(255) UNIQUE,
+    password_hash VARCHAR(255) 
+);
