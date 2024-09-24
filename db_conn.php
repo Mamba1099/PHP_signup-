@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
 $dbname = "Logins";
-$username = "mamba";
-$password = "Mamba@100#"; // Use the updated password
+$username = "";
+$password = ""; // Use the updated password
 
 // Debugging: Check if the script is being executed
 echo "db_conn.php script started<br>";
