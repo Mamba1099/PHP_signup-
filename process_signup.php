@@ -1,5 +1,7 @@
 <?php
 
+$mysqli = require __DIR__ . "/db_conn.php";
+
 if (empty($_POST["name"])) {
     die("Valid name required <br>");
 }
@@ -7,7 +9,6 @@ if (empty($_POST["name"])) {
 if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
     die("Valid Email required <br>");
 }
-
 
 if (strlen($_POST["password"]) < 8) {
     die("Password must be at least 8 characters <br>");
@@ -21,44 +22,61 @@ if (!preg_match("/[0-9]/", $_POST["password"])) {
     die("Password must contain at least one number <br>");
 }
 
-// check if the password match
 if ($_POST["password"] !== $_POST["password_confirmation"]) {
-    die("Password must match!! <br>");
+    die("Passwords must match!! <br>");
 }
 
-// make password secure
+// Debugging: Output the POST data
+echo "<pre>";
+print_r($_POST);
+echo "</pre>";
+
 $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
-
-$mysqli = require __DIR__ . "/db_conn.php";
+// Debugging: Output the hashed password
+echo "Password Hash: " . $password_hash . "<br>";
 
 $email = $_POST["email"];
 
+// Debugging: Output the email
+echo "Email: " . $email . "<br>";
+
 $sql = "SELECT * FROM Info WHERE email = ?";
-$stmt = $conn->prepare($sql);
+$stmt = $mysqli->prepare($sql);
+
+if (!$stmt) {
+    die("MySQL error: " . $mysqli->error);
+}
+
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Debugging: Output the number of rows found
+echo "Number of rows found: " . $result->num_rows . "<br>";
+
 if ($result->num_rows > 0) {
-    echo ("Email already taken");
+    echo "Email already taken";
 } else {
     $sql = "INSERT INTO Info (name, email, password_hash) VALUES (?, ?, ?)";
-
-    $stmt = $conn->prepare($sql);
+    $stmt = $mysqli->prepare($sql);
 
     if (!$stmt) {
         die("MySQL error: " . $mysqli->error);
     }
-    $name = $_POST["name"];
-    $password_hash = $_POST["password_hash"];
 
+    // Debugging: Output the SQL query
+    echo "SQL Query: " . $sql . "<br>";
 
-    // Assuming $password_hash is properly defined elsewhere
     $stmt->bind_param("sss", $_POST["name"], $_POST["email"], $password_hash);
 
+    // Debugging: Output the bound parameters
+    echo "Bound Parameters: ";
+    var_dump($_POST["name"], $_POST["email"], $password_hash);
+    echo "<br>";
+
     if ($stmt->execute()) {
-        header("location: signup_success.html");
+        header("Location: signup_success.html");
         exit;
     } else {
         if ($mysqli->errno === 1062) {
@@ -70,4 +88,5 @@ if ($result->num_rows > 0) {
 }
 
 $stmt->close();
-$conn->close();
+$mysqli->close();
+?>
