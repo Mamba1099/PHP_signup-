@@ -1,19 +1,19 @@
 <?php
-
 $host = "localhost";
 $dbname = "Logins";
-$username = "root";
-$password = "";
+$username = "mamba";
+$password = "Mamba@100#"; // Use the updated password
 
-$mysqli = new mysqli(
-    hostname: $host,
-    database: $dbname,
-    username: $username,
-    password: $password
-);
+// Debugging: Check if the script is being executed
+echo "db_conn.php script started<br>";
+
+$mysqli = new mysqli($host, $username, $password, $dbname);
 
 if ($mysqli->connect_error) {
     die("Connection error: " . $mysqli->connect_error);
+} else {
+    echo "Connected to the database<br>";
 }
 
 return $mysqli;
+?>
