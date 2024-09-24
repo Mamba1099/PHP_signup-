@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS Info (
 );
 
 -- If the root user already exists, use ALTER USER to change the password
+-- you can alter or use the one you have already created
+-- before you try it delete your database then create your database again
+-- for the user change it and use the one you want juu this is kinda mine🤣
 ALTER USER 'mamba'@'localhost' IDENTIFIED BY 'Mamba@100#';
 
 GRANT ALL PRIVILEGES ON Logins.* TO 'root' @'localhost';
